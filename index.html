@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="icon" type="image/x-icon" href="image/logo.svg" />
+    <title>Les petits plats</title>
+    <!-- Fontawesome Icon  -->
+    <script
+      src="https://kit.fontawesome.com/572a7e07a4.js"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Bootstrap CSS  -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
+      crossorigin="anonymous"
+    />
+    <!-- Google Font  -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=Manrope:wght@200..800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Personnal CSS -->
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+
+  <body>
+    <div id="loader" class="loader"></div>
+    <img id="loaderLogo" src="./images/Logo.png" alt="loader-logo" />
+    <header>
+      <div id="logo">
+        <img class="logoTitle" src="./images/Logo.png" alt="logo" />
+      </div>
+      <div class="headerContainer">
+        <h1 class="title">
+          CHERCHEZ PARMI PLUS DE 1500 RECETTES DU QUOTIDIEN, SIMPLES ET
+          DÉLICIEUSES
+        </h1>
+        <div class="search">
+          <div class="searchContainer">
+            <input
+              type="text"
+              class="searchInput"
+              placeholder="Rechercher une recette, un ingrédient, ..."
+              aria-label="Search"
+            />
+            <img src="./images/search.svg" alt="search" class="searchIcon" />
+          </div>
+        </div>
+      </div>
+    </header>
+    <main>
+      <div id="containerFilter">
+        <div class="btnFilter" id="filterIngredients">
+          <div class="titleFilter">
+            <h2>Ingrédients</h2>
+            <i class="fa fa-chevron-down"></i>
+          </div>
+          <div class="searchFilter">
+            <input type="text" aria-label="ingredient-search" />
+            <img
+              class="searchIconGrey"
+              src="images/searchGrey.svg"
+              alt="search"
+            />
+          </div>
+        </div>
+        <div class="btnFilter" id="filterAppliances">
+          <div class="titleFilter">
+            <h2>Appareils</h2>
+            <i class="fa fa-chevron-down"></i>
+          </div>
+          <div class="searchFilter">
+            <input type="text" aria-label="appareil-search" />
+            <img
+              class="searchIconGrey"
+              src="images/searchGrey.svg"
+              alt="search"
+            />
+          </div>
+        </div>
+        <div class="btnFilter" id="filterUstensils">
+          <div class="titleFilter">
+            <h2>Ustensiles</h2>
+            <i class="fa fa-chevron-down"></i>
+          </div>
+          <div class="searchFilter">
+            <input type="text" aria-label="ustensile-search" />
+            <img
+              class="searchIconGrey"
+              src="images/searchGrey.svg"
+              alt="search"
+            />
+          </div>
+        </div>
+      </div>
+      <aside id="tag"></aside>
+      <section id="containerRecipes"></section>
+    </main>
+    <script src="scripts/pages/index.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
