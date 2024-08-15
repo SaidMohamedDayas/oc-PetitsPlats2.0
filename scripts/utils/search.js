@@ -32,24 +32,41 @@ function searchRecipe() {
     .replace(/\s+/g, " ")
     .toLowerCase();
 
-  filteredRecipes = recipes.filter((recipe) => {
+  filteredRecipes = [];
+
+  for (let i = 0; i < recipes.length; i++) {
+    const recipe = recipes[i];
     const recipeTitle = recipe.name.toLowerCase();
     const recipeIngredients = getRecipeIngredients(recipe);
     const recipeDescription = recipe.description.toLowerCase();
 
-    // Vérifier la correspondance dans le titre, les ingrédients ou la description
-    if (
-      recipeTitle.includes(searchValue) ||
-      recipeIngredients.some((ingredient) =>
-        ingredient.includes(searchValue)
-      ) ||
-      recipeDescription.includes(searchValue)
-    ) {
-      return true;
+    let matchFound = false;
+
+    // Vérifier la correspondance dans le titre
+    if (recipeTitle.includes(searchValue)) {
+      matchFound = true;
     }
 
-    return false;
-  });
+    // Vérifier la correspondance dans les ingrédients si aucune correspondance trouvée dans le titre
+    if (!matchFound) {
+      for (let j = 0; j < recipeIngredients.length; j++) {
+        if (recipeIngredients[j].includes(searchValue)) {
+          matchFound = true;
+          break;
+        }
+      }
+    }
+
+    // Vérifier la correspondance dans la description si aucune correspondance trouvée dans le titre ou les ingrédients
+    if (!matchFound && recipeDescription.includes(searchValue)) {
+      matchFound = true;
+    }
+
+    // Si une correspondance est trouvée, ajouter la recette aux recettes filtrées
+    if (matchFound) {
+      filteredRecipes.push(recipe);
+    }
+  }
 
   // Affichage des recettes filtrées
   if (filteredRecipes.length === 0) {
@@ -85,7 +102,9 @@ export function updateRecipeDisplay(filteredRecipes) {
 
 // Fonction pour récupérer les ingrédients des recettes
 export function getRecipeIngredients(recipe) {
-  return recipe.ingredients.map((ingredient) =>
-    ingredient.ingredient.toLowerCase()
-  );
+  const ingredientsList = [];
+  for (let i = 0; i < recipe.ingredients.length; i++) {
+    ingredientsList.push(recipe.ingredients[i].ingredient.toLowerCase());
+  }
+  return ingredientsList;
 }
