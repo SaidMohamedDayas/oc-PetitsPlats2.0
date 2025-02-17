@@ -1,5 +1,5 @@
 import { recipes } from "../data/recipes.js";
-import { RecipeCardFactory } from "../pages/index.js";
+import { RecipeCardFactory } from "../factories/RecipeCardFactory.js";
 import { updateTags, removeTags } from "./tags.js";
 
 let filteredRecipes = [];
@@ -77,7 +77,7 @@ export function updateRecipeDisplay(filteredRecipes) {
   }
 
   // Vider le filtre avant d'afficher les ingrédients
-  removeTags();
+  // removeTags();
 
   // Mettre à jour les tags en fonction des recettes filtrées
   updateTags(filteredRecipes);
