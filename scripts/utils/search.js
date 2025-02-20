@@ -1,6 +1,6 @@
 import { recipes } from "../data/recipes.js";
 import { RecipeCardFactory } from "../factories/RecipeCardFactory.js";
-import { updateTags, removeTags } from "./tags.js";
+import { updateTags, selectedTags } from "./tags.js";
 
 let filteredRecipes = [];
 
@@ -27,40 +27,46 @@ searchInput.addEventListener("keyup", (event) => {
 
 // Fonction pour effectuer une recherche de recettes
 function searchRecipe() {
-  const searchValue = searchInput.value
-    .trim()
-    .replace(/\s+/g, " ")
-    .toLowerCase();
+  const searchValue = searchInput.value.trim().toLowerCase();
 
+  // Filtrage par recherche principale
   filteredRecipes = recipes.filter((recipe) => {
     const recipeTitle = recipe.name.toLowerCase();
     const recipeIngredients = getRecipeIngredients(recipe);
     const recipeDescription = recipe.description.toLowerCase();
 
-    // Vérifier la correspondance dans le titre, les ingrédients ou la description
-    if (
+    return (
       recipeTitle.includes(searchValue) ||
       recipeIngredients.some((ingredient) =>
         ingredient.includes(searchValue)
       ) ||
       recipeDescription.includes(searchValue)
-    ) {
-      return true;
-    }
-
-    return false;
+    );
   });
 
-  // Affichage des recettes filtrées
-  if (filteredRecipes.length === 0) {
-    recipesContainer.textContent = `Aucune recette ne contient '${searchValue}'. Vous pouvez chercher "tarte aux pommes", "poisson", etc.`;
-    filterContainer.classList.add("hide");
-    recipesContainer.classList.add("messageContainer");
-  } else {
-    updateRecipeDisplay(filteredRecipes);
-    filterContainer.classList.remove("hide");
-    recipesContainer.classList.remove("messageContainer");
-  }
+  // Appliquer aussi les filtres de tags
+  filteredRecipes = filteredRecipes.filter((recipe) => {
+    const recipeIngredients = getRecipeIngredients(recipe);
+    const recipeAppliance = recipe.appliance.toLowerCase();
+    const recipeUstensils = recipe.ustensils.map((ustensil) =>
+      ustensil.toLowerCase()
+    );
+
+    return (
+      selectedTags.ingredients.every((tag) =>
+        recipeIngredients.includes(tag.toLowerCase())
+      ) &&
+      selectedTags.appliances.every((tag) =>
+        recipeAppliance.includes(tag.toLowerCase())
+      ) &&
+      selectedTags.ustensils.every((tag) =>
+        recipeUstensils.includes(tag.toLowerCase())
+      )
+    );
+  });
+
+  // Mise à jour de l'affichage des recettes
+  updateRecipeDisplay(filteredRecipes);
 }
 
 // Fonction pour la mise à jour de l'affichage des recettes filtrées
@@ -75,9 +81,6 @@ export function updateRecipeDisplay(filteredRecipes) {
         ? "1 recette"
         : `${filteredRecipes.length} recettes`;
   }
-
-  // Vider le filtre avant d'afficher les ingrédients
-  // removeTags();
 
   // Mettre à jour les tags en fonction des recettes filtrées
   updateTags(filteredRecipes);
