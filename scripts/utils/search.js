@@ -1,6 +1,6 @@
 import { recipes } from "../data/recipes.js";
-import { RecipeCardFactory } from "../pages/index.js";
-import { updateTags, removeTags } from "./tags.js";
+import { RecipeCardFactory } from "../factories/RecipeCardFactory.js";
+import { updateTags, selectedTags } from "./tags.js";
 
 let filteredRecipes = [];
 
@@ -27,10 +27,7 @@ searchInput.addEventListener("keyup", (event) => {
 
 // Fonction pour effectuer une recherche de recettes
 function searchRecipe() {
-  const searchValue = searchInput.value
-    .trim()
-    .replace(/\s+/g, " ")
-    .toLowerCase();
+  const searchValue = searchInput.value.trim().toLowerCase();
 
   filteredRecipes = [];
 
@@ -68,16 +65,58 @@ function searchRecipe() {
     }
   }
 
-  // Affichage des recettes filtrées
-  if (filteredRecipes.length === 0) {
-    recipesContainer.textContent = `Aucune recette ne contient '${searchValue}'. Vous pouvez chercher "tarte aux pommes", "poisson", etc.`;
-    filterContainer.classList.add("hide");
-    recipesContainer.classList.add("messageContainer");
-  } else {
-    updateRecipeDisplay(filteredRecipes);
-    filterContainer.classList.remove("hide");
-    recipesContainer.classList.remove("messageContainer");
+  // Appliquer aussi les filtres de tags
+  const tempFilteredRecipes = [];
+  for (let i = 0; i < filteredRecipes.length; i++) {
+    const recipe = filteredRecipes[i];
+    const recipeIngredients = getRecipeIngredients(recipe);
+    const recipeAppliance = recipe.appliance.toLowerCase();
+    const recipeUstensils = recipe.ustensils.map((ustensil) =>
+      ustensil.toLowerCase()
+    );
+
+    let tagsMatch = true;
+
+    for (let j = 0; j < selectedTags.ingredients.length; j++) {
+      if (
+        !recipeIngredients.includes(selectedTags.ingredients[j].toLowerCase())
+      ) {
+        tagsMatch = false;
+        break;
+      }
+    }
+
+    if (tagsMatch) {
+      for (let j = 0; j < selectedTags.appliances.length; j++) {
+        if (
+          !recipeAppliance.includes(selectedTags.appliances[j].toLowerCase())
+        ) {
+          tagsMatch = false;
+          break;
+        }
+      }
+    }
+
+    if (tagsMatch) {
+      for (let j = 0; j < selectedTags.ustensils.length; j++) {
+        if (
+          !recipeUstensils.includes(selectedTags.ustensils[j].toLowerCase())
+        ) {
+          tagsMatch = false;
+          break;
+        }
+      }
+    }
+
+    if (tagsMatch) {
+      tempFilteredRecipes.push(recipe);
+    }
   }
+
+  filteredRecipes = tempFilteredRecipes;
+
+  // Mise à jour de l'affichage des recettes
+  updateRecipeDisplay(filteredRecipes);
 }
 
 // Fonction pour la mise à jour de l'affichage des recettes filtrées
@@ -92,9 +131,6 @@ export function updateRecipeDisplay(filteredRecipes) {
         ? "1 recette"
         : `${filteredRecipes.length} recettes`;
   }
-
-  // Vider le filtre avant d'afficher les ingrédients
-  removeTags();
 
   // Mettre à jour les tags en fonction des recettes filtrées
   updateTags(filteredRecipes);
